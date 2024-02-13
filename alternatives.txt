@@ -1,0 +1,41 @@
+<?php
+try {
+    $query = "SELECT * FROM cars";
+    $result = $mysqli->query($query);
+
+    if ($result) {
+        // Запазваме резултата в асоциативен масив
+        $cars = $result->fetch_all(MYSQLI_ASSOC);
+
+        //Освобождаваме променливата (добра практика)
+        $result->free_result();
+    } else {
+        throw new Exception("Error executing query: " . $mysqli->error);
+    }
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+// Затваряме връзката (добра практика)
+$mysqli->close();
+?>
+
+
+<?php
+// Достъп до базата данни за базата данни
+$db_server = "localhost"; //още известно като host
+$db_user = "root";
+$db_password = "";
+$db_name = "renault_website";
+
+// MySQLi връзка
+$mysqli = new mysqli($db_server, $db_user, $db_password, $db_name);
+//Проверяваме дали сме се вързали успешно
+if ($mysqli->connect_error) {
+    die("MySQLi Connection Failed: " . $mysqli->connect_error);
+}
+?>
+
+
+
+

@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit();
             }
         } catch (PDOException $e) {
-            echo("Error: " . $e->getMessage());
+            echo ("Error: " . $e->getMessage());
         }
     }
 }
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errors['login'] = 'Invalid username or password';
             }
         } catch (PDOException $e) {
-            echo("Error: " . $e->getMessage());
+            echo ("Error: " . $e->getMessage());
         }
     }
 }
@@ -85,15 +85,39 @@ if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: /index.html"); // Redirect to your home page or any other page after logout
     exit();
-}
+}?>
 
+<?php
 try {
     $stmt = $pdo->query("SELECT * FROM cars");
     $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    echo("Error: " . $e->getMessage());
+    echo ("Error: " . $e->getMessage());
 }
 ?>
+
+<?php
+try {
+    $query = "SELECT * FROM cars";
+    $result = $mysqli->query($query);
+
+    if ($result) {
+        // Запазваме резултата в асоциативен масив
+        $cars = $result->fetch_all(MYSQLI_ASSOC);
+
+        //Освобождаваме променливата (добра практика)
+        $result->free_result();
+    } else {
+        throw new Exception("Error executing query: " . $mysqli->error);
+    }
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+
+// Затваряме връзката (добра практика)
+$mysqli->close();
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -111,7 +135,7 @@ try {
 <body>
     <!--navigation-->
     <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <button class="navbar-toggler order-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -119,11 +143,11 @@ try {
                 <h1 class="navbar-brand order-1">Renault</h1>
                 <div class="collapse navbar-collapse order-3" id="navbarTogglerDemo01">
                     <ul class="navbar-nav ms-auto">
-                        <?php if(isset($_SESSION['user_id'])): ?>
+                        <?php if (isset($_SESSION['user_id'])) : ?>
                             <li class="nav-item">
-                                <a class="nav-link active" href="index.php" <?php session_destroy();?>><i class="fa-solid fa-sign-out"></i>Logout</a>
+                                <a class="nav-link active" href="index.php" <?php session_destroy(); ?>><i class="fa-solid fa-sign-out"></i>Logout</a>
                             </li>
-                        <?php else: ?>
+                        <?php else : ?>
                             <li class="nav-item">
                                 <a class="nav-link active" href="#" onclick="openLogin()"><i class="fa-solid fa-right-to-bracket"></i>Login</a>
                             </li>
@@ -201,7 +225,7 @@ try {
             </section>
         </div>
         <!--Lower-->
-        <div class="row car-grid lower">
+        <div class="row lower">
             <?php foreach ($cars as $car) : ?>
                 <div class="col-md-4 mb-4">
                     <a href="<?php echo 'product.php?product=' . $car['car_id']; ?>">
@@ -209,7 +233,8 @@ try {
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="mb-0">
-                                        <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $car['car_id'] ?>" aria-expanded="false" aria-controls="collapse<?= $car['car_id'] ?>">
+                                        <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $car['car_id'] ?>"
+                                         aria-expanded="false" aria-controls="collapse<?= $car['car_id'] ?>">
                                             <img src="<?= $car['image_url'] ?>" class="d-block w-100 images" alt="<?= $car['model'] ?>">
                                         </button>
                                     </h5>
