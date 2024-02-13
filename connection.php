@@ -6,6 +6,7 @@ $db_user = "root";
 $db_password = "";
 $db_name = "renault_website";
 
+
 // PDO връзка
 $dsn = "mysql:host=$db_server;dbname=$db_name;charset=utf8mb4";
 // PDO опции
@@ -21,10 +22,4 @@ try {
     // проверяваме за грешки
     die("Error: " . $e->getMessage());
 }
-
-// MySQLi връзка
-$mysqli = new mysqli($db_server, $db_user, $db_password, $db_name);
-//Проверяваме дали сме се вързали успешно
-if ($mysqli->connect_error) {
-    die("MySQLi Connection Failed: " . $mysqli->connect_error);
-}
+?>
