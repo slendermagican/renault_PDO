@@ -58,21 +58,34 @@ if (isset($_GET['product'])) {
             <li class="list-group-item">Weight: <?= htmlspecialchars($car['weight']) ?> kg</li>
         </ul>
     </div>
-       <!-- Call the function after the script is loaded -->
-       <script>
-      // Data for different pages
-      var page1Labels = ["Zoro", "Luffy", "Uusopp"];
-      var page1Data = [93, 95, 70];
-      createPopularityChart(page1Labels, page1Data);
-
-      // Or you can call the function later in your code when you have the data available
-    </script>
+   
+    <footer class="footer mt-5 py-4">
+      <div class="container text-center">
+        <h5 class="text-uppercase mb-4">Power</h5>
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <canvas id="popularityChart" width="400" height="200"></canvas>
+            <!-- Canvas element for the chart -->
+          </div>
+        </div>
+      </div>
+    </footer>
 
     <!-- Modern JS Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="product.js"></script>
+    <!-- Call the function after the script is loaded -->
+    <script>
+      // Data for different pages
+      var page1Labels = ["Clio", "Laguna", "Modus", "Kadjar"];
+      var page1Data = [95, 80, 75, 76];
+      createPopularityChart(page1Labels, page1Data);
+
+      // Or you can call the function later in your code when you have the data available
+    </script>
 
 </body>
 

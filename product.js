@@ -6,7 +6,7 @@ function createPopularityChart(labels, data) {
         labels: labels,
         datasets: [
           {
-            label: "Popularity",
+            label: "Power",
             data: data,
             backgroundColor: ["#ff1f5a", "#ffac1f", "#3ad46b", "#21a1ff"],
             hoverBackgroundColor: ["#ff1f5a", "#ffac1f", "#3ad46b", "#21a1ff"],
