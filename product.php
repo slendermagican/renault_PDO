@@ -37,15 +37,20 @@ if (isset($_GET['product'])) {
 
 <body class="container">
 
-    <div class="mt-5">
-        <div class="https://localhost/renault_website_php/">
-            <h1 class="text-xl font-bold mb-2"><?= htmlspecialchars($car['model']) ?></h1>
+    <header class="text-center mb-4">
+        <h1 class="text-xl font-bold mb-2"><?= htmlspecialchars($car['model']) ?></h1>
+    </header>
+
+    <main class="mt-5 container w-100">
+      <!-- Image -->
+        <div class="float-start w-50">
             <img src="<?= htmlspecialchars($car['image_url']) ?>" alt="img" class="img-fluid rounded mb-2">
             <p class="text-muted"><?= htmlspecialchars($car['description']) ?></p>
         </div>
 
-        <!-- Display all parameters of the car using Bootstrap list group -->
-        <ul class="list-group">
+        <!-- List-->
+        <div class="float-end w-50">
+          <ul class="list-group">
             <li class="list-group-item">Year: <?= htmlspecialchars($car['year']) ?></li>
             <li class="list-group-item">Engine Type: <?= htmlspecialchars($car['engine_type']) ?></li>
             <li class="list-group-item">Horsepower: <?= htmlspecialchars($car['horsepower']) ?> hp</li>
@@ -56,8 +61,9 @@ if (isset($_GET['product'])) {
             <li class="list-group-item">Fuel Efficiency (City): <?= htmlspecialchars($car['fuel_efficiency_city']) ?> l/100km</li>
             <li class="list-group-item">Fuel Efficiency (Highway): <?= htmlspecialchars($car['fuel_efficiency_highway']) ?> l/100km</li>
             <li class="list-group-item">Weight: <?= htmlspecialchars($car['weight']) ?> kg</li>
-        </ul>
-    </div>
+          </ul>
+        </div>
+    </main>
    
     <footer class="footer mt-5 py-4">
       <div class="container text-center">
