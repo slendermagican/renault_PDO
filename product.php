@@ -37,10 +37,12 @@ if (isset($_GET['product'])) {
 
 <body class="container">
 
-    <div id="product-content" class="mt-5">
-        <h1 class="text-xl font-bold mb-2"><?= htmlspecialchars($car['model']) ?></h1>
-        <img src="<?= htmlspecialchars($car['image_url']) ?>" alt="img" class="img-fluid rounded mb-2">
-        <p class="text-muted"><?= htmlspecialchars($car['description']) ?></p>
+    <div class="mt-5">
+        <div class="https://localhost/renault_website_php/">
+            <h1 class="text-xl font-bold mb-2"><?= htmlspecialchars($car['model']) ?></h1>
+            <img src="<?= htmlspecialchars($car['image_url']) ?>" alt="img" class="img-fluid rounded mb-2">
+            <p class="text-muted"><?= htmlspecialchars($car['description']) ?></p>
+        </div>
 
         <!-- Display all parameters of the car using Bootstrap list group -->
         <ul class="list-group">
@@ -56,11 +58,21 @@ if (isset($_GET['product'])) {
             <li class="list-group-item">Weight: <?= htmlspecialchars($car['weight']) ?> kg</li>
         </ul>
     </div>
+       <!-- Call the function after the script is loaded -->
+       <script>
+      // Data for different pages
+      var page1Labels = ["Zoro", "Luffy", "Uusopp"];
+      var page1Data = [93, 95, 70];
+      createPopularityChart(page1Labels, page1Data);
+
+      // Or you can call the function later in your code when you have the data available
+    </script>
 
     <!-- Modern JS Libraries -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="product.js"></script>
 
 </body>
 

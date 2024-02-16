@@ -23,3 +23,11 @@ try {
     die("Error: " . $e->getMessage());
 }
 
+
+// MySQLi връзка
+$mysqli = new mysqli($db_server, $db_user, $db_password, $db_name);
+//Проверяваме дали сме се вързали успешно
+if ($mysqli->connect_error) {
+    die("MySQLi Connection Failed: " . $mysqli->connect_error);
+}
+
