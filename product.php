@@ -42,28 +42,30 @@ if (isset($_GET['product'])) {
     </header>
 
     <main class="mt-5 container w-100">
-      <!-- Image -->
-        <div class="float-start w-50">
+    <div class="row">
+        <!-- Image and Description -->
+        <div class="col-md-6">
             <img src="<?= htmlspecialchars($car['image_url']) ?>" alt="img" class="img-fluid rounded mb-2">
             <p class="text-muted"><?= htmlspecialchars($car['description']) ?></p>
         </div>
 
-        <!-- List-->
-        <div class="float-end w-50">
-          <ul class="list-group">
-            <li class="list-group-item">Year: <?= htmlspecialchars($car['year']) ?></li>
-            <li class="list-group-item">Engine Type: <?= htmlspecialchars($car['engine_type']) ?></li>
-            <li class="list-group-item">Horsepower: <?= htmlspecialchars($car['horsepower']) ?> hp</li>
-            <li class="list-group-item">Torque: <?= htmlspecialchars($car['torque']) ?> Nm</li>
-            <li class="list-group-item">Transmission: <?= htmlspecialchars($car['transmission']) ?></li>
-            <li class="list-group-item">Acceleration Time: <?= htmlspecialchars($car['acceleration_time']) ?> seconds</li>
-            <li class="list-group-item">Top Speed: <?= htmlspecialchars($car['top_speed']) ?> km/h</li>
-            <li class="list-group-item">Fuel Efficiency (City): <?= htmlspecialchars($car['fuel_efficiency_city']) ?> l/100km</li>
-            <li class="list-group-item">Fuel Efficiency (Highway): <?= htmlspecialchars($car['fuel_efficiency_highway']) ?> l/100km</li>
-            <li class="list-group-item">Weight: <?= htmlspecialchars($car['weight']) ?> kg</li>
-          </ul>
+        <!-- List -->
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item">Year: <?= htmlspecialchars($car['year']) ?></li>
+                <li class="list-group-item">Engine Type: <?= htmlspecialchars($car['engine_type']) ?></li>
+                <li class="list-group-item">Horsepower: <?= htmlspecialchars($car['horsepower']) ?> hp</li>
+                <li class="list-group-item">Torque: <?= htmlspecialchars($car['torque']) ?> Nm</li>
+                <li class="list-group-item">Transmission: <?= htmlspecialchars($car['transmission']) ?></li>
+                <li class="list-group-item">Acceleration Time: <?= htmlspecialchars($car['acceleration_time']) ?> seconds</li>
+                <li class="list-group-item">Top Speed: <?= htmlspecialchars($car['top_speed']) ?> km/h</li>
+                <li class="list-group-item">Fuel Efficiency (City): <?= htmlspecialchars($car['fuel_efficiency_city']) ?> l/100km</li>
+                <li class="list-group-item">Fuel Efficiency (Highway): <?= htmlspecialchars($car['fuel_efficiency_highway']) ?> l/100km</li>
+                <li class="list-group-item">Weight: <?= htmlspecialchars($car['weight']) ?> kg</li>
+            </ul>
         </div>
-    </main>
+    </div>
+</main>
    
     <footer class="footer mt-5 py-4">
       <div class="container text-center">
