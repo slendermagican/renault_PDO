@@ -132,7 +132,7 @@ JOIN cars ON orders.car_id = cars.car_id;
 +----------------+
 
 
---Informaciqta za vsicki porucki po daden model
+--Informaciqta za vsicki porucki po model clio
 SELECT
     orders.order_id,
     users.username,
@@ -146,31 +146,18 @@ JOIN
     users ON orders.user_id = users.user_id
 JOIN
     cars ON orders.car_id = cars.car_id
+WHERE cars.model="Renault Clio"    
 ORDER BY order_id;    
 
 
-+----------+--------------+------------------+----------+------------+---------------------+
-| order_id | username     | model            | quantity | full_price | order_date          |
-+----------+--------------+------------------+----------+------------+---------------------+
-|        1 | ivak         | Renault Kadjar   |        2 |   70000.00 | 2024-02-19 16:54:06 |
-|        2 | john_doe     | Renault Clio     |        1 |   20000.00 | 2024-02-19 16:54:06 |
-|        3 | mary_smith   | Renault Zoe      |        2 |   64000.00 | 2024-02-19 16:54:06 |
-|        4 | alex_jones   | Renault Capture  |        3 |   75000.00 | 2024-02-19 16:54:06 |
-|        5 | lisa_jackson | Renault Twingo   |        1 |   18000.00 | 2024-02-19 16:54:06 |
-|        6 | mike_smith   | Renault Arkana   |        2 |   52000.00 | 2024-02-19 16:54:06 |
-|        7 | emily_davis  | Renault Megane   |        1 |   28000.00 | 2024-02-19 16:54:06 |
-|        8 | chris_miller | Renault Koleos   |        3 |  120000.00 | 2024-02-19 16:54:06 |
-|        9 | ivak         | Renault Clio     |        1 |   20000.00 | 2024-02-19 16:54:06 |
-|       10 | john_doe     | Renault Talisman |        2 |   60000.00 | 2024-02-19 16:54:06 |
-|       11 | mary_smith   | Renault Zoe      |        1 |   32000.00 | 2024-02-19 16:54:06 |
-|       12 | alex_jones   | Renault Kadjar   |        2 |   70000.00 | 2024-02-19 16:54:06 |
-|       13 | lisa_jackson | Renault Clio     |        1 |   20000.00 | 2024-02-19 16:54:06 |
-|       14 | mike_smith   | Renault Capture  |        1 |   25000.00 | 2024-02-19 16:54:06 |
-|       15 | emily_davis  | Renault Arkana   |        2 |   52000.00 | 2024-02-19 16:54:06 |
-|       16 | chris_miller | Renault Clio     |        1 |   20000.00 | 2024-02-19 16:54:06 |
-|       17 | sarah_wilson | Renault Zoe      |        3 |   96000.00 | 2024-02-19 16:54:06 |
-|       18 | sarah_wilson | Renault Talisman |        1 |   30000.00 | 2024-02-19 16:54:06 |
-+----------+--------------+------------------+----------+------------+---------------------+
++----------+--------------+--------------+----------+------------+---------------------+
+| order_id | username     | model        | quantity | full_price | order_date          |
++----------+--------------+--------------+----------+------------+---------------------+
+|        2 | john_doe     | Renault Clio |        1 |   20000.00 | 2024-02-19 17:07:22 |
+|        9 | ivak         | Renault Clio |        1 |   20000.00 | 2024-02-19 17:07:22 |
+|       13 | lisa_jackson | Renault Clio |        1 |   20000.00 | 2024-02-19 17:07:22 |
+|       16 | chris_miller | Renault Clio |        1 |   20000.00 | 2024-02-19 17:07:22 |
++----------+--------------+--------------+----------+------------+---------------------+
 
 --smeni datata na porucka s id=2
 UPDATE orders
