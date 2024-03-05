@@ -39,19 +39,20 @@ if (isset($_GET['product'])) {
 
     <header class="text-center mb-4">
         <h1 class="text-xl font-bold mb-2"><?= htmlspecialchars($car['model']) ?></h1>
+        <p class="text-muted">Price: $<?= number_format($car['price'], 2) ?></p>
     </header>
 
     <main class="mt-5 container w-100">
-    <div class="row">
-        <!-- Image and Description -->
-        <div class="col-md-6">
-            <img src="<?= htmlspecialchars($car['image_url']) ?>" alt="img" class="img-fluid rounded mb-2">
-            <p class="text-muted"><?= htmlspecialchars($car['description']) ?></p>
-        </div>
+        <div class="row">
+            <!-- Image and Description -->
+            <div class="col-md-6">
+                <img src="<?= htmlspecialchars($car['image_url']) ?>" alt="img" class="img-fluid rounded mb-2">
+                <p class="text-muted"><?= htmlspecialchars($car['description']) ?></p>
+            </div>
 
-        <!-- List -->
-        <div class="col-md-6">
-            <ul class="list-group">
+            <!-- List -->
+            <div class="col-md-6">
+                <ul class="list-group">
                 <li class="list-group-item">Year: <?= htmlspecialchars($car['year']) ?></li>
                 <li class="list-group-item">Engine Type: <?= htmlspecialchars($car['engine_type']) ?></li>
                 <li class="list-group-item">Horsepower: <?= htmlspecialchars($car['horsepower']) ?> hp</li>
@@ -62,21 +63,21 @@ if (isset($_GET['product'])) {
                 <li class="list-group-item">Fuel Efficiency (City): <?= htmlspecialchars($car['fuel_efficiency_city']) ?> l/100km</li>
                 <li class="list-group-item">Fuel Efficiency (Highway): <?= htmlspecialchars($car['fuel_efficiency_highway']) ?> l/100km</li>
                 <li class="list-group-item">Weight: <?= htmlspecialchars($car['weight']) ?> kg</li>
-            </ul>
+                </ul>
+            </div>
         </div>
-    </div>
-</main>
-   
+    </main>
+
     <footer class="footer mt-5 py-4">
-      <div class="container text-center">
-        <h5 class="text-uppercase mb-4">Power</h5>
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <canvas id="popularityChart" width="400" height="200"></canvas>
-            <!-- Canvas element for the chart -->
-          </div>
+        <div class="container text-center">
+            <h5 class="text-uppercase mb-4">Power</h5>
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <canvas id="popularityChart" width="400" height="200"></canvas>
+                    <!-- Canvas element for the chart -->
+                </div>
+            </div>
         </div>
-      </div>
     </footer>
 
     <!-- Modern JS Libraries -->
@@ -87,15 +88,16 @@ if (isset($_GET['product'])) {
     <script src="product.js"></script>
     <!-- Call the function after the script is loaded -->
     <script>
-      // Data for different pages
-      var page1Labels = ["Clio", "Laguna", "Modus", "Kadjar"];
-      var page1Data = [95, 80, 75, 76];
-      createPopularityChart(page1Labels, page1Data);
+        // Data for different pages
+        var page1Labels = ["Clio", "Laguna", "Modus", "Kadjar"];
+        var page1Data = [95, 80, 75, 76];
+        createPopularityChart(page1Labels, page1Data);
 
-      // Or you can call the function later in your code when you have the data available
+        // Or you can call the function later in your code when you have the data available
     </script>
 
 </body>
+
 
 
 </html>
