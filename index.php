@@ -2,82 +2,63 @@
 session_start();
 include 'connection.php';
 
-$errors = [];
 
+$alertMessage = "";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Check if the form is submitted
+
+
     if (isset($_POST['register'])) {
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
-        $username = $_POST['username'];
         $email = $_POST['email'];
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
-
-        try {
-            // Check if the username already exists
-            $checkUsernameStmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-            $checkUsernameStmt->execute([$username]);
-            $existingUsername = $checkUsernameStmt->fetch(PDO::FETCH_ASSOC);
-
-            // Check if the email already exists
-            $checkEmailStmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-            $checkEmailStmt->execute([$email]);
-            $existingEmail = $checkEmailStmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($existingUsername) {
-                $errors['username'] = 'Username is already taken';
-            }
-            if ($existingEmail) {
-                $errors['email'] = 'Email is already taken';
-            }
-
-            if (empty($errors)) {
-                // Prepare and execute the SQL query to insert data into the users table
-                $insertStmt = $pdo->prepare("INSERT INTO users (username, password, email, fname, lname) VALUES (?, ?, ?, ?, ?)");
-                $insertStmt->execute([$username, $password, $email, $fname, $lname]);
-
-                // Retrieve the user ID after insertion
-                $userId = $pdo->lastInsertId();
-
-                // Save the user ID in the session
-                $_SESSION['user_id'] = $userId;
-
-                // Redirect to a success page or perform other actions after successful registration
-                echo "Registration successful";
-                exit();
-            }
-        } catch (PDOException $e) {
-            echo ("Error: " . $e->getMessage());
-        }
-    }
-}
-
-//Login logic
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Check if the form is submitted
-    if (isset($_POST['login'])) {
         $username = $_POST['username'];
         $password = $_POST['password'];
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $insertStmt = $mysqli->prepare("INSERT INTO users (fname, lname, email, username, password) VALUES (?, ?, ?, ?, ?)");
 
-        try {
-            // Check if the username exists
-            $checkUsernameStmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-            $checkUsernameStmt->execute([$username]);
-            $user = $checkUsernameStmt->fetch(PDO::FETCH_ASSOC);
+        $insertStmt->bind_param("sssss", $fname, $lname, $email, $username, $hashed_password);
 
-            if ($user && password_verify($password, $user['password'])) {
-                // Password is correct, log in the user
-                $_SESSION['user_id'] = $user['user_id'];
-                echo "Login successful";
-                exit();
+        if ($insertStmt->execute()) {
+            echo "Registration successful";
+        } else {
+            echo "Error: " . $mysqli->error;
+        }
+    }
+    // Handle form submission for login
+    if (isset($_POST['login'])) {
+        // Retrieve form data
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        // Prepare and execute the SQL query to retrieve user data
+        $stmt = $mysqli->prepare("SELECT user_id, password FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        // Check if the user exists
+        if ($result->num_rows === 1) {
+            $row = $result->fetch_assoc();
+            $hashed_password = $row['password'];
+            // Verify password
+            if (password_verify($password, $hashed_password)) {
+                // Password is correct
+                $alertMessage = "Login successful";
+                // Execute JavaScript code to display the alert
+                echo "<script>alert('$alertMessage');</script>";
             } else {
-                $errors['login'] = 'Invalid username or password';
+                // Password is incorrect
+                $alertMessage = "Incorrect username or password";
+                // Execute JavaScript code to display the alert
+                echo "<script>alert('$alertMessage');</script>";
             }
-        } catch (PDOException $e) {
-            echo ("Error: " . $e->getMessage());
+        } else {
+            // User does not exist
+            $alertMessage = "Incorrect username or password";
+            // Execute JavaScript code to display the alert
+            echo "<script>alert('$alertMessage');</script>";
         }
     }
 }
+
 
 
 // Logout logic
@@ -85,39 +66,29 @@ if (isset($_GET['logout'])) {
     session_destroy();
     header("Location: /index.html"); // Redirect to your home page or any other page after logout
     exit();
-}?>
+} ?>
 
 <?php
-try {
-    $stmt = $pdo->query("SELECT * FROM cars");
-    $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo ("Error: " . $e->getMessage());
-}
-?>
-
-<?php
-try {
-    $query = "SELECT * FROM cars";
-    $result = $mysqli->query($query);
-
-    if ($result) {
-        // Запазваме резултата в асоциативен масив
-        $cars = $result->fetch_all(MYSQLI_ASSOC);
-
-        //Освобождаваме променливата (добра практика)
-        $result->free_result();
-    } else {
-        throw new Exception("Error executing query: " . $mysqli->error);
+if (isset($_POST['priceRange'])) {
+    try {
+        $maxPrice = $_POST['priceRange'];
+        $stmt = $pdo->prepare("SELECT * FROM cars WHERE price <= $maxPrice");
+        $stmt->execute();
+        $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        // Handle any database errors
+        echo ("Error: " . $e->getMessage());
     }
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+} else {
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM cars");
+        $stmt->execute();
+        $cars = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo ("Error: " . $e->getMessage());
+    }
 }
-
-// Затваряме връзката (добра практика)
-$mysqli->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -175,14 +146,18 @@ $mysqli->close();
             <!--filter-->
             <aside>
                 <h2>Filter</h2>
-                <div class="form-group">
-                    <label for="priceRange">Price Range</label>
-                    <input type="range" class="form-control-range" id="priceRange" min="0" max="1000" step="10" value="0">
-                    <div class="d-flex justify-content-between">
-                        <span id="minPrice">$0</span>
-                        <span id="maxPrice">$1000</span>
+                <form method="POST" action="index.php">
+                    <div class="form-group">
+                        <label for="priceRange">Price Range</label>
+                        <input type="range" class="form-control-range" id="priceRange" name="priceRange" min="10000" max="50000" step="500" value="10000">
+                        <div class="d-flex justify-content-between">
+                            <span id="maxPrice">$10,000</span>
+                            <span id="minPrice">$50,000</span>
+                        </div>
                     </div>
-                </div>
+                    <button type="submit" class="btn btn-primary">Apply Filter</button>
+                </form>
+
                 <p>Colors:</p>
                 <label>
                     <input type="checkbox">
@@ -233,8 +208,7 @@ $mysqli->close();
                             <div class="card">
                                 <div class="card-header">
                                     <h5 class="mb-0">
-                                        <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $car['car_id'] ?>"
-                                         aria-expanded="false" aria-controls="collapse<?= $car['car_id'] ?>">
+                                        <button class="btn btn-link collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?= $car['car_id'] ?>" aria-expanded="false" aria-controls="collapse<?= $car['car_id'] ?>">
                                             <img src="<?= $car['image_url'] ?>" class="d-block w-100 images" alt="<?= $car['model'] ?>">
                                         </button>
                                     </h5>
@@ -270,17 +244,16 @@ $mysqli->close();
                 </div>
                 <div class="modal-body">
                     <!-- Login Form -->
-                    <form id="loginForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-                        <div class="mb-3">
-                            <label for="loginUsername" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="loginUsername" name="username" required>
+                    <form id="loginForm" method="post" action="">
+                        <div class="form-group">
+                            <label for="loginUsername">Username</label>
+                            <input type="text" class="form-control" id="loginUsername" name="username" placeholder="Enter your username" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="loginPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="loginPassword" name="password" required>
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter your password" required>
                         </div>
-                        <span class="text-danger"><?php echo $errors['login']; ?></span>
-                        <button type="submit" class="btn btn-primary" name="login">Login</button>
+                        <input type="submit" name="login" class="btn btn-primary" value="Log In">
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -299,30 +272,30 @@ $mysqli->close();
                 </div>
                 <div class="modal-body">
                     <!-- Register Form -->
-                    <form id="registerForm" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-                        <div class="mb-3">
-                            <label for="registerFirstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="registerFirstName" name="fname" required>
+                    <form id="signupForm" method="post" action="">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="fname" placeholder="Enter your first name" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lname" placeholder="Enter your last name" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="registerLastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="registerLastName" name="lname" required>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter your city" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="registerUsername" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="registerUsername" name="username" required>
-                            <span class="text-danger"><?php echo $errors['username']; ?></span>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Choose a username" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="registerEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="registerEmail" name="email" required>
-                            <span class="text-danger"><?php echo $errors['email']; ?></span>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
                         </div>
-                        <div class="mb-3">
-                            <label for="registerPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="registerPassword" name="password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Register</button>
+                        <input type="submit" name="register" class="btn btn-primary" value="Sign Up">
                     </form>
                 </div>
                 <div class="modal-footer">
